@@ -27,7 +27,8 @@ info:
     - Duplicated field definitions across related schemas
     - Manual synchronization between base and derived schemas
     - Complex composite objects pulling from multiple sources
-
+externalDocs: 
+  url: https://github.com/redocly/redocly-api-reference-template
 tags:
   - name: Users
     description: "User management and profiles"
