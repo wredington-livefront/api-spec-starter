@@ -1,0 +1,56 @@
+parameters:
+  - name: postId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+
+get:
+  operationId: getPost
+  tags: [Posts]
+  summary: Get post
+  description: Get complete post details
+  responses:
+    '200':
+      description: Post details
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/base/post/Post.yaml'
+    '404':
+      description: Post not found
+
+put:
+  operationId: updatePost
+  tags: [Posts]
+  summary: Update post
+  description: Update post content and metadata
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/base/post/view/PostCreatePayload.yaml'
+  responses:
+    '200':
+      description: Post updated
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/base/post/Post.yaml'
+    '400':
+      description: Invalid input
+    '404':
+      description: Post not found
+
+delete:
+  operationId: deletePost
+  tags: [Posts]
+  summary: Delete post
+  description: Delete a blog post
+  responses:
+    '204':
+      description: Post deleted successfully
+    '404':
+      description: Post not found

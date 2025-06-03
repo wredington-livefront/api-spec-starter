@@ -1,0 +1,62 @@
+get:
+  tags: [Posts]
+  summary: List posts
+  operationId: listPosts
+  description: Get a paginated list of published posts
+  parameters:
+    - name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+        maximum: 100
+    - name: offset
+      in: query
+      schema:
+        type: integer
+        default: 0
+    - name: status
+      in: query
+      schema:
+        type: string
+        enum: [draft, published, archived]
+        default: published
+  responses:
+    '200':
+      description: List of posts
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              posts:
+                type: array
+                items:
+                  $ref: '../components/schemas/base/post/view/PostSummary.yaml'
+              total:
+                type: integer
+              limit:
+                type: integer
+              offset:
+                type: integer
+
+post:
+  tags: [Posts]
+  summary: Create post
+  operationId: createPost
+  description: Create a new blog post
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/base/post/view/PostCreatePayload.yaml'
+  responses:
+    '201':
+      description: Post created successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/base/post/Post.yaml'
+    '400':
+      description: Invalid input

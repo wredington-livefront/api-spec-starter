@@ -1,0 +1,58 @@
+type: object
+title: "Post Card"
+description: |
+  Enhanced post summary with computed fields for rich card displays.
+  Demonstrates mixing base fields with view-specific computed fields.
+properties:
+  id:
+    type: string
+    format: uuid
+    description: "Unique post identifier"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "id"
+      last-verified: "2024-06-03"
+  title:
+    type: string
+    description: "Post title"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "title"
+      last-verified: "2024-06-03"
+  excerpt:
+    type: string
+    description: "Short post summary/excerpt"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "excerpt"
+      last-verified: "2024-06-03"
+  like_count:
+    type: integer
+    description: "Number of likes on this post"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "like_count"
+      last-verified: "2024-06-03"
+  published_at:
+    type: string
+    format: date-time
+    description: "Post publication timestamp"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "published_at"
+      last-verified: "2024-06-03"
+  
+  # View-specific computed/derived fields not in base Post model
+  reading_time_minutes:
+    type: integer
+    description: "Estimated reading time in minutes (computed from content length)"
+  relative_published_date:
+    type: string
+    description: "Human-readable relative date like '2 days ago' or 'last week'"
+  permalink:
+    type: string
+    format: uri
+    description: "Full URL to this post (computed from slug)"
+  is_recent:
+    type: boolean
+    description: "Whether this post was published within the last 7 days"

@@ -1,0 +1,112 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Blog Platform API
+  termsOfService: https://example.com/terms/
+  contact:
+    name: Contact our support
+    email: contact@example.com
+    url: http://example.com/contact
+  description: >
+    This is a **blog platform** API demonstrating OpenAPI schema inheritance challenges.
+
+    # Introduction
+
+    This API definition showcases common problems with schema composition, inheritance,
+    and field duplication that teams face when building APIs with OpenAPI.
+
+    The example demonstrates:
+    - Simple derivative schemas (subsets of base models)
+    - Complex composite schemas (fields from multiple sources)
+    - View-specific computed fields
+    - Input vs output schema variations
+
+    # Schema Inheritance Problems
+
+    This API intentionally highlights the maintenance burden of:
+    - Duplicated field definitions across related schemas
+    - Manual synchronization between base and derived schemas
+    - Complex composite objects pulling from multiple sources
+
+tags:
+  - name: Users
+    description: "User management and profiles"
+  - name: Posts
+    description: "Blog posts and content"
+  - name: Feed
+    description: "Aggregated content feeds"
+
+servers:
+  - url: https://{tenant}/api/v1
+    variables:
+      tenant:
+        default: www
+        description: Your tenant id
+
+paths:
+
+  # User paths
+  /users:
+    $ref: 'paths/users.yaml'
+  /users/{userId}:
+    $ref: 'paths/users_{userId}.yaml'
+  /users/{userId}/profile:
+    $ref: 'paths/users_{userId}_profile.yaml'
+
+  # Post paths
+  /posts:
+    $ref: 'paths/posts.yaml'
+  /posts/{postId}:
+    $ref: 'paths/posts_{postId}.yaml'
+  /posts/cards:
+    $ref: 'paths/posts_cards.yaml'
+
+  # Composite paths
+  /feed:
+    $ref: 'paths/feed.yaml'
+  /users/{userId}/posts:
+    $ref: 'paths/users_{userId}_posts.yaml'
+
+components:
+  securitySchemes:
+    api_key:
+      description: "API key for authentication"
+      type: apiKey
+      in: header
+      name: X-API-Key
+    bearer_auth:
+      description: "Bearer token authentication"
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas: 
+    # User schemas
+    User:
+      $ref: 'components/schemas/base/user/User.yaml'
+    UserProfile:
+      $ref: 'components/schemas/base/user/view/UserProfile.yaml'
+    UserSummary:
+      $ref: 'components/schemas/base/user/view/UserSummary.yaml'
+    UserCreatePayload:
+      $ref: 'components/schemas/base/user/view/UserCreatePayload.yaml'
+    
+    # Post schemas
+    Post:
+      $ref: 'components/schemas/base/post/Post.yaml'
+    PostSummary:
+      $ref: 'components/schemas/base/post/view/PostSummary.yaml'
+    PostCard:
+      $ref: 'components/schemas/base/post/view/PostCard.yaml'
+    PostCreatePayload:
+      $ref: 'components/schemas/base/post/view/PostCreatePayload.yaml'
+    
+    # Composite schemas
+    FeedItem:
+      $ref: 'components/schemas/composite/FeedItem.yaml'
+    UserPosts:
+      $ref: 'components/schemas/composite/UserPosts.yaml'
+
+security:
+  - api_key: []
+  - bearer_auth: []

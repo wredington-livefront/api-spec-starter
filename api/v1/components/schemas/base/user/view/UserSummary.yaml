@@ -1,0 +1,35 @@
+type: object
+title: "User Summary"
+description: |
+  Minimal user info for lists, author bylines, and references.
+properties:
+  id:
+    type: string
+    format: uuid
+    description: "Unique user identifier"
+    x-based-on:
+      schema: "../User.yml"
+      field: "id"
+      last-verified: "2024-06-03"
+  username:
+    type: string
+    description: "Unique username"
+    x-based-on:
+      schema: "../User.yml"
+      field: "username"
+      last-verified: "2024-06-03"
+  display_name:
+    type: string
+    description: "User's display name"
+    x-based-on:
+      schema: "../User.yml"
+      field: "display_name"
+      last-verified: "2024-06-03"
+  avatar_url:
+    type: string
+    format: uri
+    description: "URL to user's profile picture"
+    x-based-on:
+      schema: "../User.yml"
+      field: "avatar_url"
+      last-verified: "2024-06-03"

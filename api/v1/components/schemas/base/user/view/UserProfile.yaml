@@ -1,0 +1,57 @@
+type: object
+title: "User Profile"
+description: |
+  Public user profile for profile pages and author attribution.
+properties:
+  id:
+    type: string
+    format: uuid
+    description: "Unique user identifier"
+    x-based-on:
+      schema: "../User.yml"
+      field: "id"
+      last-verified: "2024-06-03"
+  username:
+    type: string
+    description: "Unique username"
+    x-based-on:
+      schema: "../User.yml"
+      field: "username"
+      last-verified: "2024-06-03"
+  display_name:
+    type: string
+    description: "User's display name"
+    x-based-on:
+      schema: "../User.yml"
+      field: "display_name"
+      last-verified: "2024-06-03"
+  avatar_url:
+    type: string
+    format: uri
+    description: "URL to user's profile picture"
+    x-based-on:
+      schema: "../User.yml"
+      field: "avatar_url"
+      last-verified: "2024-06-03"
+  bio:
+    type: string
+    description: "User biography/description"
+    x-based-on:
+      schema: "../User.yml"
+      field: "bio"
+      last-verified: "2024-06-03"
+  created_at:
+    type: string
+    format: date-time
+    description: "Account creation timestamp"
+    x-based-on:
+      schema: "../User.yml"
+      field: "created_at"
+      last-verified: "2024-06-03"
+  post_count:
+    type: integer
+    description: "Total number of posts by this user"
+    x-based-on:
+      schema: "../User.yml"
+      field: "post_count"
+      last-verified: "2024-06-03"

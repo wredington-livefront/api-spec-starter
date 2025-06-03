@@ -1,0 +1,43 @@
+parameters:
+  - name: userId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+
+get:
+  tags: [Users]
+  summary: Get user
+  description: Get complete user details
+  responses:
+    '200':
+      description: User details
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/base/user/User.yaml'
+    '404':
+      description: User not found
+
+put:
+  tags: [Users]
+  summary: Update user
+  description: Update user information
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/base/user/view/UserCreatePayload.yaml'
+  responses:
+    '200':
+      description: User updated
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/base/user/User.yaml'
+    '400':
+      description: Invalid input
+    '404':
+      description: User not found

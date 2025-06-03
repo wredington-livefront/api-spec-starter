@@ -1,0 +1,22 @@
+parameters:
+  - name: userId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+
+get:
+  operationId: getUserProfile
+  tags: [Users]
+  summary: Get user profile
+  description: Get public user profile information
+  responses:
+    '200':
+      description: User public profile
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/base/user/view/UserProfile.yaml'
+    '404':
+      description: User not found

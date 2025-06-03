@@ -1,0 +1,78 @@
+type: object
+title: "User Posts Response"
+description: |
+  Composite response combining user profile information with their posts.
+  Demonstrates field amalgamation from multiple sources for a single endpoint.
+properties:
+  # Fields from User (via UserProfile)
+  user_id:
+    type: string
+    format: uuid
+    description: "Unique user identifier"
+    x-based-on:
+      schema: "../base/user/User.yaml"
+      field: "id"
+      field-rename: "user_id"
+      last-verified: "2024-06-03"
+  user_username:
+    type: string
+    description: "User's unique username"
+    x-based-on:
+      schema: "../base/user/User.yaml"
+      field: "username"
+      field-rename: "user_username"
+      last-verified: "2024-06-03"
+  user_display_name:
+    type: string
+    description: "User's display name"
+    x-based-on:
+      schema: "../base/user/User.yaml"
+      field: "display_name"
+      field-rename: "user_display_name"
+      last-verified: "2024-06-03"
+  user_avatar_url:
+    type: string
+    format: uri
+    description: "URL to user's profile picture"
+    x-based-on:
+      schema: "../base/user/User.yaml"
+      field: "avatar_url"
+      field-rename: "user_avatar_url"
+      last-verified: "2024-06-03"
+  user_bio:
+    type: string
+    description: "User biography/description"
+    x-based-on:
+      schema: "../base/user/User.yaml"
+      field: "bio"
+      field-rename: "user_bio"
+      last-verified: "2024-06-03"
+  user_post_count:
+    type: integer
+    description: "Total number of posts by this user"
+    x-based-on:
+      schema: "../base/user/User.yaml"
+      field: "post_count"
+      field-rename: "user_post_count"
+      last-verified: "2024-06-03"
+  
+  # Array of posts (using PostSummary)
+  posts:
+    type: array
+    items:
+      $ref: "../base/post/view/PostSummary.yaml"
+    description: "Array of user's posts"
+  
+  # Pagination metadata
+  total:
+    type: integer
+    description: "Total number of posts by this user"
+  limit:
+    type: integer
+    description: "Number of posts returned in this page"
+  offset:
+    type: integer
+    description: "Starting position for this page"
+  has_more:
+    type: boolean
+    description: "Whether there are more posts available"

@@ -1,0 +1,46 @@
+type: object
+title: "Post Creation Payload"
+description: |
+  Payload for creating new posts. Excludes auto-generated fields.
+properties:
+  title:
+    type: string
+    description: "Post title"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "title"
+      last-verified: "2024-06-03"
+  content:
+    type: string
+    description: "Full post content in markdown"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "content"
+      last-verified: "2024-06-03"
+  excerpt:
+    type: string
+    description: "Short post summary/excerpt"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "excerpt"
+      last-verified: "2024-06-03"
+  status:
+    type: string
+    enum: ["draft", "published", "archived"]
+    description: "Post publication status"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "status"
+      last-verified: "2024-06-03"
+  tags:
+    type: array
+    items:
+      type: string
+    description: "Post tags for categorization"
+    x-based-on:
+      schema: "../Post.yml"
+      field: "tags"
+      last-verified: "2024-06-03"
+required:
+  - title
+  - content

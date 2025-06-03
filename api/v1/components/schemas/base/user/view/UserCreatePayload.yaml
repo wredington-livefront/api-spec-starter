@@ -1,0 +1,62 @@
+type: object
+title: "User Creation Payload"
+description: |
+  Payload for creating new users. Excludes auto-generated fields
+  like id, timestamps, and system-managed data.
+properties:
+  email:
+    type: string
+    format: email
+    description: "User's email address"
+    x-based-on:
+      schema: "../User.yml"
+      field: "email"
+      last-verified: "2024-06-03"
+  name:
+    type: string
+    description: "User's full name"
+    x-based-on:
+      schema: "../User.yml"
+      field: "name"
+      last-verified: "2024-06-03"
+  avatar_url:
+    type: string
+    format: uri
+    description: "URL to user's profile picture"
+    x-based-on:
+      schema: "../User.yml"
+      field: "avatar_url"
+      last-verified: "2024-06-03"
+  role:
+    type: string
+    enum: ["customer", "agent", "admin"]
+    description: "User's role in the system"
+    x-based-on:
+      schema: "../User.yml"
+      field: "role"
+      last-verified: "2024-06-03"
+  organization_id:
+    type: string
+    format: uuid
+    description: "ID of user's organization"
+    x-based-on:
+      schema: "../User.yml"
+      field: "organization_id"
+      last-verified: "2024-06-03"
+  preferences:
+    type: object
+    properties:
+      notifications_enabled:
+        type: boolean
+      timezone:
+        type: string
+    description: "User preferences and settings"
+    x-based-on:
+      schema: "../User.yml"
+      field: "preferences"
+      last-verified: "2024-06-03"
+required:
+  - email
+  - name
+  - role
+  - organization_id

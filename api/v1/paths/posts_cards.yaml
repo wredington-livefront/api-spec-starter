@@ -1,0 +1,35 @@
+get:
+  operationId: getPostCards
+  tags: [Posts]
+  summary: Get post cards
+  description: Get posts formatted as rich cards with computed fields
+  parameters:
+    - name: limit
+      in: query
+      schema:
+        type: integer
+        default: 12
+        maximum: 50
+    - name: offset
+      in: query
+      schema:
+        type: integer
+        default: 0
+  responses:
+    '200':
+      description: List of post cards
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              cards:
+                type: array
+                items:
+                  $ref: '../components/schemas/base/post/view/PostCard.yaml'
+              total:
+                type: integer
+              limit:
+                type: integer
+              offset:
+                type: integer

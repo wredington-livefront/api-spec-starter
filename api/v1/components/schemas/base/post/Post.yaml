@@ -1,0 +1,51 @@
+type: object
+title: "Blog Post Entity"
+description: "Complete blog post representation"
+properties:
+  id:
+    type: string
+    format: uuid
+    description: "Unique post identifier"
+  title:
+    type: string
+    description: "Post title"
+  slug:
+    type: string
+    description: "URL-friendly post identifier"
+  content:
+    type: string
+    description: "Full post content in markdown"
+  excerpt:
+    type: string
+    description: "Short post summary/excerpt"
+  status:
+    type: string
+    enum: ["draft", "published", "archived"]
+    description: "Post publication status"
+  author_id:
+    type: string
+    format: uuid
+    description: "ID of the post author"
+  created_at:
+    type: string
+    format: date-time
+    description: "Post creation timestamp"
+  published_at:
+    type: string
+    format: date-time
+    description: "Post publication timestamp"
+  updated_at:
+    type: string
+    format: date-time
+    description: "Last update timestamp"
+  view_count:
+    type: integer
+    description: "Number of times this post has been viewed"
+  like_count:
+    type: integer
+    description: "Number of likes on this post"
+  tags:
+    type: array
+    items:
+      type: string
+    description: "Post tags for categorization"
