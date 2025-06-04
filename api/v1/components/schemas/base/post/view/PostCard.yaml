@@ -9,28 +9,28 @@ properties:
     format: uuid
     description: "Unique post identifier"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "id"
       last-verified: "2024-06-03"
   title:
     type: string
     description: "Post title"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "title"
       last-verified: "2024-06-03"
   excerpt:
     type: string
     description: "Short post summary/excerpt"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "excerpt"
       last-verified: "2024-06-03"
   like_count:
     type: integer
     description: "Number of likes on this post"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "like_count"
       last-verified: "2024-06-03"
   published_at:
@@ -38,7 +38,7 @@ properties:
     format: date-time
     description: "Post publication timestamp"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "published_at"
       last-verified: "2024-06-03"
   

@@ -9,7 +9,7 @@ properties:
     format: uuid
     description: "Unique post identifier"
     x-based-on:
-      schema: "../base/post/Post.yml"
+      schema: "../base/post/Post.yaml"
       field: "id"
       field-rename: "post_id"
       last-verified: "2024-06-03"
@@ -17,7 +17,7 @@ properties:
     type: string
     description: "Post title"
     x-based-on:
-      schema: "../base/post/Post.yml"
+      schema: "../base/post/Post.yaml"
       field: "title"
       field-rename: "post_title"
       last-verified: "2024-06-03"
@@ -25,7 +25,7 @@ properties:
     type: string
     description: "Short post summary"
     x-based-on:
-      schema: "../base/post/Post.yml"
+      schema: "../base/post/Post.yaml"
       field: "excerpt"
       field-rename: "post_excerpt"
       last-verified: "2024-06-03"
@@ -34,7 +34,7 @@ properties:
     format: date-time
     description: "When the post was published"
     x-based-on:
-      schema: "../base/post/Post.yml"
+      schema: "../base/post/Post.yaml"
       field: "published_at"
       field-rename: "post_published_at"
       last-verified: "2024-06-03"
@@ -42,7 +42,7 @@ properties:
     type: integer
     description: "Number of likes on this post"
     x-based-on:
-      schema: "../base/post/Post.yml"
+      schema: "../base/post/Post.yaml"
       field: "like_count"
       field-rename: "post_like_count"
       last-verified: "2024-06-03"
@@ -52,7 +52,7 @@ properties:
     format: uuid
     description: "Post author's user ID"
     x-based-on:
-      schema: "../base/user/User.yml"
+      schema: "../base/user/User.yaml"
       field: "id"
       field-rename: "author_id"
       last-verified: "2024-06-03"
@@ -60,7 +60,7 @@ properties:
     type: string
     description: "Post author's username"
     x-based-on:
-      schema: "../base/user/User.yml"
+      schema: "../base/user/User.yaml"
       field: "username"
       field-rename: "author_username"
       last-verified: "2024-06-03"
@@ -68,7 +68,7 @@ properties:
     type: string
     description: "Post author's display name"
     x-based-on:
-      schema: "../base/user/User.yml"
+      schema: "../base/user/User.yaml"
       field: "display_name"
       field-rename: "author_display_name"
       last-verified: "2024-06-03"
@@ -77,7 +77,7 @@ properties:
     format: uri
     description: "Post author's avatar URL"
     x-based-on:
-      schema: "../base/user/User.yml"
+      schema: "../base/user/User.yaml"
       field: "avatar_url"
       field-rename: "author_avatar_url"
       last-verified: "2024-06-03"

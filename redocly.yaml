@@ -2,11 +2,19 @@
 apis:
   sample@v1: 
     root: api/v1/root.yaml
+
 extends:
   - recommended
+
+plugins: 
+  -  './plugins/rules/custom-rules.js'
+
 rules:
-  no-unused-components: error
-  no-server-example.com: off
+  info-license: off
+  operation-operationId: off
+  operation-4xx-response: off
+  custom-rules/x-based-on-validator: error
+  
 theme:
   openapi:
     htmlTemplate: ./docs/index.html

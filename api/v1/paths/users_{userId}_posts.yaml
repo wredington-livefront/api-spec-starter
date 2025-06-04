@@ -7,7 +7,7 @@ parameters:
       format: uuid
 
 get:
-  operationId: getUserPosts
+  operationId: test
   tags: [Posts, Users]
   summary: Get user posts
   description: Get all posts by a specific user

@@ -7,21 +7,21 @@ properties:
     type: string
     description: "Post title"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "title"
       last-verified: "2024-06-03"
   content:
     type: string
     description: "Full post content in markdown"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "content"
       last-verified: "2024-06-03"
   excerpt:
     type: string
     description: "Short post summary/excerpt"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "excerpt"
       last-verified: "2024-06-03"
   status:
@@ -29,7 +29,7 @@ properties:
     enum: ["draft", "published", "archived"]
     description: "Post publication status"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "status"
       last-verified: "2024-06-03"
   tags:
@@ -38,7 +38,7 @@ properties:
       type: string
     description: "Post tags for categorization"
     x-based-on:
-      schema: "../Post.yml"
+      schema: "../Post.yaml"
       field: "tags"
       last-verified: "2024-06-03"
 required:

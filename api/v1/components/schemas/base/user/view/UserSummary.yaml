@@ -8,21 +8,21 @@ properties:
     format: uuid
     description: "Unique user identifier"
     x-based-on:
-      schema: "../User.yml"
+      schema: "../User.yaml"
       field: "id"
       last-verified: "2024-06-03"
   username:
     type: string
     description: "Unique username"
     x-based-on:
-      schema: "../User.yml"
+      schema: "../User.yaml"
       field: "username"
       last-verified: "2024-06-03"
   display_name:
     type: string
     description: "User's display name"
     x-based-on:
-      schema: "../User.yml"
+      schema: "../User.yaml"
       field: "display_name"
       last-verified: "2024-06-03"
   avatar_url:
@@ -30,6 +30,6 @@ properties:
     format: uri
     description: "URL to user's profile picture"
     x-based-on:
-      schema: "../User.yml"
+      schema: "../User.yaml"
       field: "avatar_url"
       last-verified: "2024-06-03"
