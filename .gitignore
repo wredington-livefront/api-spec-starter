@@ -1,3 +1,3 @@
 # Dir for bundles
-dist
+# dist - now version controlled
 node_modules

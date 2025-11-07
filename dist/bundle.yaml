@@ -1,0 +1,956 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Blog Platform API
+  termsOfService: https://example.com/terms/
+  contact:
+    name: Contact our support
+    email: contact@example.com
+    url: http://example.com/contact
+  description: |
+    This is a **blog platform** API demonstrating OpenAPI schema inheritance challenges.
+    # Introduction
+    This API definition showcases common problems with schema composition, inheritance, and field duplication that teams face when building APIs with OpenAPI.
+    The example demonstrates: - Simple derivative schemas (subsets of base models) - Complex composite schemas (fields from multiple sources) - View-specific computed fields - Input vs output schema variations
+    # Schema Inheritance Problems
+    This API intentionally highlights the maintenance burden of: - Duplicated field definitions across related schemas - Manual synchronization between base and derived schemas - Complex composite objects pulling from multiple sources
+servers:
+  - url: https://{tenant}/api/v1
+    variables:
+      tenant:
+        default: www
+        description: Your tenant id
+security:
+  - api_key: []
+  - bearer_auth: []
+tags:
+  - name: Users
+    description: User management and profiles
+  - name: Posts
+    description: Blog posts and content
+  - name: Feed
+    description: Aggregated content feeds
+externalDocs:
+  url: https://github.com/redocly/redocly-api-reference-template
+paths:
+  /users:
+    get:
+      operationId: listUsers
+      tags:
+        - Users
+      summary: List users
+      description: Get a paginated list of users
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserSummary'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+    post:
+      operationId: createUser
+      tags:
+        - Users
+      summary: Create user
+      description: Create a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreatePayload'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Users
+      summary: Get user
+      description: Get complete user details
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    put:
+      tags:
+        - Users
+      summary: Update user
+      description: Update user information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreatePayload'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+        '404':
+          description: User not found
+  /users/{userId}/profile:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getUserProfile
+      tags:
+        - Users
+      summary: Get user profile
+      description: Get public user profile information
+      responses:
+        '200':
+          description: User public profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '404':
+          description: User not found
+  /posts:
+    get:
+      tags:
+        - Posts
+      summary: List posts
+      operationId: listPosts
+      description: Get a paginated list of published posts
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - draft
+              - published
+              - archived
+            default: published
+      responses:
+        '200':
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PostSummary'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+    post:
+      tags:
+        - Posts
+      summary: Create post
+      operationId: createPost
+      description: Create a new blog post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCreatePayload'
+      responses:
+        '201':
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid input
+  /posts/{postId}:
+    parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getPost
+      tags:
+        - Posts
+      summary: Get post
+      description: Get complete post details
+      responses:
+        '200':
+          description: Post details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: Post not found
+    put:
+      operationId: updatePost
+      tags:
+        - Posts
+      summary: Update post
+      description: Update post content and metadata
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCreatePayload'
+      responses:
+        '200':
+          description: Post updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid input
+        '404':
+          description: Post not found
+    delete:
+      operationId: deletePost
+      tags:
+        - Posts
+      summary: Delete post
+      description: Delete a blog post
+      responses:
+        '204':
+          description: Post deleted successfully
+        '404':
+          description: Post not found
+  /posts/cards:
+    get:
+      operationId: getPostCards
+      tags:
+        - Posts
+      summary: Get post cards
+      description: Get posts formatted as rich cards with computed fields
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+            maximum: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of post cards
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cards:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PostCard'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+  /feed:
+    get:
+      operationId: getFeed
+      tags:
+        - Feed
+      summary: Get feed
+      description: Get the main content feed with post and author information
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Content feed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FeedItem'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+  /users/{userId}/posts:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: test
+      tags:
+        - Posts
+        - Users
+      summary: Get user posts
+      description: Get all posts by a specific user
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: User's posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPosts'
+        '404':
+          description: User not found
+components:
+  securitySchemes:
+    api_key:
+      description: API key for authentication
+      type: apiKey
+      in: header
+      name: X-API-Key
+    bearer_auth:
+      description: Bearer token authentication
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      title: User
+      description: Complete user representation
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user identifier
+        username:
+          type: string
+          description: Unique username for login
+        email:
+          type: string
+          format: email
+          description: User's email address
+        display_name:
+          type: string
+          description: User's display name
+        avatar_url:
+          type: string
+          format: uri
+          description: URL to user's profile picture
+        bio:
+          type: string
+          description: User biography/description
+        role:
+          type: string
+          enum:
+            - user
+            - moderator
+            - admin
+          description: User's role in the system
+        created_at:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+        last_active_at:
+          type: string
+          format: date-time
+          description: Last activity timestamp
+        post_count:
+          type: integer
+          description: Total number of posts by this user
+    UserProfile:
+      type: object
+      title: User Profile
+      description: |
+        Public user profile for profile pages and author attribution.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user identifier
+          x-based-on:
+            schema: ../User.yaml
+            field: id
+            last-verified: '2024-06-03'
+        username:
+          type: string
+          description: Unique username
+          x-based-on:
+            schema: ../User.yaml
+            field: username
+            last-verified: '2024-06-03'
+        display_name:
+          type: string
+          description: User's display name
+          x-based-on:
+            schema: ../User.yaml
+            field: display_name
+            last-verified: '2024-06-03'
+        avatar_url:
+          type: string
+          format: uri
+          description: URL to user's profile picture
+          x-based-on:
+            schema: ../User.yaml
+            field: avatar_url
+            last-verified: '2024-06-03'
+        bio:
+          type: string
+          description: User biography/description
+          x-based-on:
+            schema: ../User.yaml
+            field: bio
+            last-verified: '2024-06-03'
+        created_at:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+          x-based-on:
+            schema: ../User.yaml
+            field: created_at
+            last-verified: '2024-06-03'
+        post_count:
+          type: integer
+          description: Total number of posts by this user
+          x-based-on:
+            schema: ../User.yaml
+            field: post_count
+            last-verified: '2024-06-03'
+    UserSummary:
+      type: object
+      title: User Summary
+      description: |
+        Minimal user info for lists, author bylines, and references.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user identifier
+          x-based-on:
+            schema: ../User.yaml
+            field: id
+            last-verified: '2024-06-03'
+        username:
+          type: string
+          description: Unique username
+          x-based-on:
+            schema: ../User.yaml
+            field: username
+            last-verified: '2024-06-03'
+        display_name:
+          type: string
+          description: User's display name
+          x-based-on:
+            schema: ../User.yaml
+            field: display_name
+            last-verified: '2024-06-03'
+        avatar_url:
+          type: string
+          format: uri
+          description: URL to user's profile picture
+          x-based-on:
+            schema: ../User.yaml
+            field: avatar_url
+            last-verified: '2024-06-03'
+    UserCreatePayload:
+      type: object
+      title: User Creation Payload
+      description: |
+        Payload for creating new users. Excludes auto-generated fields
+        like id, timestamps, and system-managed data.
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address
+          x-based-on:
+            schema: ../User.yaml
+            field: email
+            last-verified: '2024-06-03'
+        role:
+          type: string
+          enum:
+            - customer
+            - agent
+            - admin
+          description: User's role in the system
+          x-based-on:
+            schema: ../User.yaml
+            field: role
+            last-verified: '2024-06-03'
+      required:
+        - email
+        - name
+        - role
+        - organization_id
+    Post:
+      type: object
+      title: Blog Post Entity
+      description: Complete blog post representation
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique post identifier
+        title:
+          type: string
+          description: Post title
+        slug:
+          type: string
+          description: URL-friendly post identifier
+        content:
+          type: string
+          description: Full post content in markdown
+        excerpt:
+          type: string
+          description: Short post summary/excerpt
+        status:
+          type: string
+          enum:
+            - draft
+            - published
+            - archived
+          description: Post publication status
+        author_id:
+          type: string
+          format: uuid
+          description: ID of the post author
+        created_at:
+          type: string
+          format: date-time
+          description: Post creation timestamp
+        published_at:
+          type: string
+          format: date-time
+          description: Post publication timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        view_count:
+          type: integer
+          description: Number of times this post has been viewed
+        like_count:
+          type: integer
+          description: Number of likes on this post
+        tags:
+          type: array
+          items:
+            type: string
+          description: Post tags for categorization
+    PostSummary:
+      type: object
+      title: Post Summary
+      description: |
+        Post summary for list views, feeds, and cards.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique post identifier
+          x-based-on:
+            schema: ../Post.yaml
+            field: id
+            last-verified: '2024-06-03'
+        title:
+          type: string
+          description: Post title
+          x-based-on:
+            schema: ../Post.yaml
+            field: title
+            last-verified: '2024-06-03'
+        slug:
+          type: string
+          description: URL-friendly post identifier
+          x-based-on:
+            schema: ../Post.yaml
+            field: slug
+            last-verified: '2024-06-03'
+        excerpt:
+          type: string
+          description: Short post summary/excerpt
+          x-based-on:
+            schema: ../Post.yaml
+            field: excerpt
+            last-verified: '2024-06-03'
+        published_at:
+          type: string
+          format: date-time
+          description: Post publication timestamp
+          x-based-on:
+            schema: ../Post.yaml
+            field: published_at
+            last-verified: '2024-06-03'
+    PostCard:
+      type: object
+      title: Post Card
+      description: |
+        Enhanced post summary with computed fields for rich card displays.
+        Demonstrates mixing base fields with view-specific computed fields.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique post identifier
+          x-based-on:
+            schema: ../Post.yaml
+            field: id
+            last-verified: '2024-06-03'
+        title:
+          type: string
+          description: Post title
+          x-based-on:
+            schema: ../Post.yaml
+            field: title
+            last-verified: '2024-06-03'
+        excerpt:
+          type: string
+          description: Short post summary/excerpt
+          x-based-on:
+            schema: ../Post.yaml
+            field: excerpt
+            last-verified: '2024-06-03'
+        like_count:
+          type: integer
+          description: Number of likes on this post
+          x-based-on:
+            schema: ../Post.yaml
+            field: like_count
+            last-verified: '2024-06-03'
+        published_at:
+          type: string
+          format: date-time
+          description: Post publication timestamp
+          x-based-on:
+            schema: ../Post.yaml
+            field: published_at
+            last-verified: '2024-06-03'
+        reading_time_minutes:
+          type: integer
+          description: Estimated reading time in minutes (computed from content length)
+        relative_published_date:
+          type: string
+          description: Human-readable relative date like '2 days ago' or 'last week'
+        permalink:
+          type: string
+          format: uri
+          description: Full URL to this post (computed from slug)
+        is_recent:
+          type: boolean
+          description: Whether this post was published within the last 7 days
+    PostCreatePayload:
+      type: object
+      title: Post Creation Payload
+      description: |
+        Payload for creating new posts. Excludes auto-generated fields.
+      properties:
+        title:
+          type: string
+          description: Post title
+          x-based-on:
+            schema: ../Post.yaml
+            field: title
+            last-verified: '2024-06-03'
+        content:
+          type: string
+          description: Full post content in markdown
+          x-based-on:
+            schema: ../Post.yaml
+            field: content
+            last-verified: '2024-06-03'
+        excerpt:
+          type: string
+          description: Short post summary/excerpt
+          x-based-on:
+            schema: ../Post.yaml
+            field: excerpt
+            last-verified: '2024-06-03'
+        status:
+          type: string
+          enum:
+            - draft
+            - published
+            - archived
+          description: Post publication status
+          x-based-on:
+            schema: ../Post.yaml
+            field: status
+            last-verified: '2024-06-03'
+        tags:
+          type: array
+          items:
+            type: string
+          description: Post tags for categorization
+          x-based-on:
+            schema: ../Post.yaml
+            field: tags
+            last-verified: '2024-06-03'
+      required:
+        - title
+        - content
+    FeedItem:
+      type: object
+      title: Feed Item
+      description: |
+        Composite object for blog feed containing post info + author details.
+        Demonstrates field amalgamation from multiple sources.
+      properties:
+        post_id:
+          type: string
+          format: uuid
+          description: Unique post identifier
+          x-based-on:
+            schema: ../base/post/Post.yaml
+            field: id
+            field-rename: post_id
+            last-verified: '2024-06-03'
+        post_title:
+          type: string
+          description: Post title
+          x-based-on:
+            schema: ../base/post/Post.yaml
+            field: title
+            field-rename: post_title
+            last-verified: '2024-06-03'
+        post_excerpt:
+          type: string
+          description: Short post summary
+          x-based-on:
+            schema: ../base/post/Post.yaml
+            field: excerpt
+            field-rename: post_excerpt
+            last-verified: '2024-06-03'
+        post_published_at:
+          type: string
+          format: date-time
+          description: When the post was published
+          x-based-on:
+            schema: ../base/post/Post.yaml
+            field: published_at
+            field-rename: post_published_at
+            last-verified: '2024-06-03'
+        post_like_count:
+          type: integer
+          description: Number of likes on this post
+          x-based-on:
+            schema: ../base/post/Post.yaml
+            field: like_count
+            field-rename: post_like_count
+            last-verified: '2024-06-03'
+        author_id:
+          type: string
+          format: uuid
+          description: Post author's user ID
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: id
+            field-rename: author_id
+            last-verified: '2024-06-03'
+        author_username:
+          type: string
+          description: Post author's username
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: username
+            field-rename: author_username
+            last-verified: '2024-06-03'
+        author_display_name:
+          type: string
+          description: Post author's display name
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: display_name
+            field-rename: author_display_name
+            last-verified: '2024-06-03'
+        author_avatar_url:
+          type: string
+          format: uri
+          description: Post author's avatar URL
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: avatar_url
+            field-rename: author_avatar_url
+            last-verified: '2024-06-03'
+    UserPosts:
+      type: object
+      title: User Posts Response
+      description: |
+        Composite response combining user profile information with their posts.
+        Demonstrates field amalgamation from multiple sources for a single endpoint.
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          description: Unique user identifier
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: id
+            field-rename: user_id
+            last-verified: '2024-06-03'
+        user_username:
+          type: string
+          description: User's unique username
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: username
+            field-rename: user_username
+            last-verified: '2024-06-03'
+        user_display_name:
+          type: string
+          description: User's display name
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: display_name
+            field-rename: user_display_name
+            last-verified: '2024-06-03'
+        user_avatar_url:
+          type: string
+          format: uri
+          description: URL to user's profile picture
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: avatar_url
+            field-rename: user_avatar_url
+            last-verified: '2024-06-03'
+        user_bio:
+          type: string
+          description: User biography/description
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: bio
+            field-rename: user_bio
+            last-verified: '2024-06-03'
+        user_post_count:
+          type: integer
+          description: Total number of posts by this user
+          x-based-on:
+            schema: ../base/user/User.yaml
+            field: post_count
+            field-rename: user_post_count
+            last-verified: '2024-06-03'
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostSummary'
+          description: Array of user's posts
+        total:
+          type: integer
+          description: Total number of posts by this user
+        limit:
+          type: integer
+          description: Number of posts returned in this page
+        offset:
+          type: integer
+          description: Starting position for this page
+        has_more:
+          type: boolean
+          description: Whether there are more posts available
